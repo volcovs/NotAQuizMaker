@@ -1,0 +1,160 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  min-height: auto;
+}
+
+.upload-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.upload-card {
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  padding: 32px 28px;
+  border-radius: 12px;
+  background: #f8f9ff;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.upload-card h1 {
+  margin-bottom: 10px;
+  color: #2d2d2d;
+}
+
+.upload-subtitle {
+  color: #555;
+  margin-bottom: 24px;
+}
+
+.upload-subtitle span {
+  font-weight: 600;
+  color: #4b4b4b;
+}
+
+.file-input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px;
+  border-radius: 6px;
+  background: #4CAF50;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.file-input input {
+  display: none;
+}
+
+.upload-error {
+  color: #b00020;
+  margin-bottom: 16px;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.quiz-wrapper {
+  padding: 20px;
+}
+
+.quiz-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px 0;
+}
+
+.quiz-toolbar-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quiz-source {
+  color: #555;
+  font-size: 0.95em;
+}
+
+.btn {
+  padding: 12px 30px;
+  font-size: 1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background-color: #9e9e9e;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #757575;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  .app {
+    border-radius: 4px;
+  }
+
+  .quiz-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
