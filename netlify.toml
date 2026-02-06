@@ -1,0 +1,19 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/quiz"
+  to = "/.netlify/functions/quiz"
+  status = 200
+
+[[redirects]]
+  from = "/api/quiz/:id"
+  to = "/.netlify/functions/quiz/:id"
+  status = 200
+
+[[redirects]]
+  from = "/q/*"
+  to = "/index.html"
+  status = 200

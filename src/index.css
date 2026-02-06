@@ -79,6 +79,33 @@ body {
   margin-bottom: 16px;
 }
 
+.or-separator {
+  margin: 6px 0 12px;
+  color: #7a7a7a;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.link-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.link-input {
+  flex: 1 1 260px;
+  min-width: 220px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #d0d4f4;
+  font-size: 0.95rem;
+}
+
 .upload-actions {
   display: flex;
   justify-content: center;
@@ -105,6 +132,42 @@ body {
 .quiz-source {
   color: #555;
   font-size: 0.95em;
+}
+
+.share-panel {
+  margin: 16px 20px 0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #f3f5ff;
+  border: 1px solid rgba(118, 75, 162, 0.2);
+}
+
+.share-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.share-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.share-input {
+  flex: 1 1 320px;
+  min-width: 220px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d0d4f4;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+.share-error {
+  margin: 12px 20px 0;
+  color: #b00020;
 }
 
 .btn {
