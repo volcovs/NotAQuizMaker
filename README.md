@@ -39,6 +39,7 @@ npm run dev
 
 ```
 src/
+├── assets
 ├── components/
 │   ├── Quiz.jsx          # Main quiz component
 │   ├── Quiz.css          # Quiz styling
@@ -95,7 +96,7 @@ Upload the quiz questions as a JSON structure with different question types:
 }```
 
 **Future work**
-- deploy application
-- shareable public quizzes
+- timed vs. free mode
+- question type that would support images
 - more styling
 - remove AI slop & fix documentation
