@@ -214,12 +214,12 @@ function App() {
   };
 
   const handleDownload = () => {
-    const content = `const quizData = ${JSON.stringify(quizData, null, 2)};\n\nexport default quizData;\n`;
-    const blob = new Blob([content], { type: 'application/javascript' });
+    const content = `${JSON.stringify(quizData, null, 2)}`;
+    const blob = new Blob([content], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'quizData.js';
+    link.download = 'quizData.json';
     link.click();
     URL.revokeObjectURL(url);
   };

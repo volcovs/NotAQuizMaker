@@ -22,6 +22,36 @@ export const MultipleChoice = ({ question, onAnswer, selectedAnswer }) => {
   );
 };
 
+export const ImageMultipleChoice = ({ question, onAnswer, selectedAnswer }) => {
+  return (
+    <div className="question-container">
+      <h3>{question.question}</h3>
+      {question.imageUrl && (
+        <img
+          className="question-image"
+          src={question.imageUrl}
+          alt={question.imageAlt || 'Question illustration'}
+          loading="lazy"
+        />
+      )}
+      <div className="options">
+        {Object.entries(question.options).map(([key, value]) => (
+          <label key={key} className="option">
+            <input
+              type="radio"
+              name={`question-${question.id}`}
+              value={key}
+              checked={selectedAnswer === key}
+              onChange={(e) => onAnswer(e.target.value)}
+            />
+            <span className="option-text">{key}: {value}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const MultipleChoiceMultipleAnswers = ({ question, onAnswer, selectedAnswers }) => {
   const selectedSet = new Set(selectedAnswers || []);
 

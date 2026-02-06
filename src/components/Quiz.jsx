@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { CompleteSentence, FillInTheBlank, Matching, MultipleChoice, MultipleChoiceMultipleAnswers } from './QuestionTypes';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { CompleteSentence, FillInTheBlank, ImageMultipleChoice, Matching, MultipleChoice, MultipleChoiceMultipleAnswers } from './QuestionTypes';
 import './Quiz.css';
 
 const shuffleArray = (array) => {
@@ -16,13 +16,31 @@ export default function Quiz({ data }) {
   const [answers, setAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [submittedAnswers, setSubmittedAnswers] = useState({});
+  const [mode, setMode] = useState(null);
+  const [perQuestionSeconds, setPerQuestionSeconds] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const timeExpiryRef = useRef(false);
 
   const sourceQuestions = Array.isArray(data?.questions) ? data.questions : [];
+
+  const normalizeQuestion = (q) => {
+    if (!q) {
+      return q;
+    }
+    if (!q.imageUrl && q.imageBase64) {
+      const mime = q.imageMime || 'image/png';
+      return {
+        ...q,
+        imageUrl: `data:${mime};base64,${q.imageBase64}`,
+      };
+    }
+    return q;
+  };
 
   const questions = useMemo(() => {
     const shuffled = shuffleArray(sourceQuestions);
     return shuffled.map((q, index) => ({
-      ...q,
+      ...normalizeQuestion(q),
       originalId: q.id,
       id: index + 1,
     }));
@@ -34,7 +52,41 @@ export default function Quiz({ data }) {
     setAnswers({});
     setShowResults(false);
     setSubmittedAnswers({});
+    setMode(null);
+    setPerQuestionSeconds(30);
+    setTimeLeft(30);
+    timeExpiryRef.current = false;
   }, [data]);
+
+  useEffect(() => {
+    timeExpiryRef.current = false;
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    if (mode !== 'timed' || showResults) {
+      return;
+    }
+    setTimeLeft(perQuestionSeconds);
+  }, [mode, currentQuestion, perQuestionSeconds, showResults]);
+
+  useEffect(() => {
+    if (mode !== 'timed' || showResults) {
+      return;
+    }
+    const intervalId = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [mode, showResults]);
+
+  useEffect(() => {
+    if (mode !== 'timed' || showResults) {
+      return;
+    }
+    if (timeLeft <= 0) {
+      handleTimeExpired();
+    }
+  }, [timeLeft, mode, showResults]);
 
   const handleAnswer = (questionId, value, term = null) => {
     if (question.type === 'matching') {
@@ -88,7 +140,7 @@ export default function Quiz({ data }) {
     questions.forEach((q) => {
       const userAnswer = answers[q.id];
 
-      if (q.type === 'multiple_choice') {
+      if (q.type === 'multiple_choice' || q.type === 'image_multiple_choice') {
         if (userAnswer === q.answer) {
           correct++;
         }
@@ -123,7 +175,7 @@ export default function Quiz({ data }) {
   };
 
   const isAnswerCorrect = (q, userAnswer) => {
-    if (q.type === 'multiple_choice') {
+    if (q.type === 'multiple_choice' || q.type === 'image_multiple_choice') {
       return userAnswer === q.answer;
     } else if (q.type === 'multiple_choice_multiple_answers') {
       const normalized = Array.isArray(userAnswer) ? userAnswer : [];
@@ -155,6 +207,28 @@ export default function Quiz({ data }) {
     });
   };
 
+  const handleTimeExpired = () => {
+    if (timeExpiryRef.current || showResults) {
+      return;
+    }
+    timeExpiryRef.current = true;
+    setSubmittedAnswers((prev) => ({
+      ...prev,
+      [question.id]: true,
+    }));
+    setTimeout(() => {
+      handleNext();
+      timeExpiryRef.current = false;
+    }, 800);
+  };
+
+  const formatTime = (seconds) => {
+    const safe = Math.max(0, seconds);
+    const mins = Math.floor(safe / 60);
+    const secs = safe % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const isAnswerProvided = (q, userAnswer) => {
     if (q.type === 'multiple_choice_multiple_answers') {
       return Array.isArray(userAnswer) && userAnswer.length > 0;
@@ -168,6 +242,42 @@ export default function Quiz({ data }) {
         <div className="results-container">
           <h1>No Questions Found</h1>
           <p className="result-message">Upload a valid quiz file to begin.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!mode) {
+    return (
+      <div className="quiz-container">
+        <div className="mode-card">
+          <h1>Choose Quiz Mode</h1>
+          <p className="mode-subtitle">Select how you want to take this quiz.</p>
+          <div className="mode-actions">
+            <button className="btn btn-primary" onClick={() => setMode('free')}>
+              Free Mode
+            </button>
+            <div className="mode-timed">
+              <div className="mode-timed-label">Timed Mode</div>
+              <div className="mode-options">
+                {[10, 30, 60].map((seconds) => (
+                  <label key={seconds} className="mode-option">
+                    <input
+                      type="radio"
+                      name="timed-seconds"
+                      value={seconds}
+                      checked={perQuestionSeconds === seconds}
+                      onChange={() => setPerQuestionSeconds(seconds)}
+                    />
+                    {seconds === 60 ? '1 min' : `${seconds}s`}
+                  </label>
+                ))}
+              </div>
+              <button className="btn btn-secondary" onClick={() => setMode('timed')}>
+                Start Timed Mode
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -211,6 +321,17 @@ export default function Quiz({ data }) {
 
   return (
     <div className="quiz-container">
+      {mode === 'timed' && (
+        <div className="time-row">
+          <div className="time-bar">
+            <div
+              className="time-bar-fill"
+              style={{ width: `${Math.max(0, (timeLeft / perQuestionSeconds) * 100)}%` }}
+            ></div>
+          </div>
+          <div className="time-remaining">{formatTime(timeLeft)}</div>
+        </div>
+      )}
       <div className="quiz-header">
         <h1>Quiz</h1>
         <div className="progress">
@@ -231,6 +352,14 @@ export default function Quiz({ data }) {
 
       {question.type === 'multiple_choice' && (
         <MultipleChoice
+          question={question}
+          onAnswer={(value) => handleAnswer(question.id, value)}
+          selectedAnswer={answers[question.id]}
+        />
+      )}
+
+      {question.type === 'image_multiple_choice' && (
+        <ImageMultipleChoice
           question={question}
           onAnswer={(value) => handleAnswer(question.id, value)}
           selectedAnswer={answers[question.id]}
@@ -281,7 +410,7 @@ export default function Quiz({ data }) {
           {!isAnswerCorrect(question, answers[question.id]) && (
             <div className="feedback-answer">
               <p><strong>Correct Answer:</strong></p>
-              {question.type === 'multiple_choice' && (
+              {(question.type === 'multiple_choice' || question.type === 'image_multiple_choice') && (
                 <p>{question.options[question.answer]} ({question.answer})</p>
               )}
               {question.type === 'multiple_choice_multiple_answers' && (
