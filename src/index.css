@@ -47,24 +47,6 @@ body {
   color: #2d2d2d;
 }
 
-.app-brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.app-logo {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
-}
-
-.app-logo--small {
-  width: 32px;
-  height: 32px;
-}
 
 .upload-subtitle {
   color: #555;
@@ -142,10 +124,6 @@ body {
   padding: 10px 20px 0;
 }
 
-.quiz-toolbar-brand {
-  display: flex;
-  align-items: center;
-}
 
 .quiz-toolbar-actions {
   display: flex;

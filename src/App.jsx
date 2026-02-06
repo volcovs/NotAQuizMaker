@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import logo from './assets/logo.svg';
 import Quiz from './components/Quiz';
 import defaultQuizData from './quizData';
 
@@ -230,10 +229,7 @@ function App() {
       {showUploader ? (
         <div className="upload-container">
           <div className="upload-card">
-            <div className="app-brand">
-              <img className="app-logo" src={logo} alt="Quiz app logo" />
-              <h1>Load Quiz Questions</h1>
-            </div>
+            <h1>Load Quiz Questions</h1>
             <p className="upload-subtitle">
               Upload a .json file with a <span>questions</span> array to start the quiz.
             </p>
@@ -273,9 +269,6 @@ function App() {
       ) : (
         <div className="quiz-wrapper">
           <div className="quiz-toolbar">
-            <div className="quiz-toolbar-brand">
-              <img className="app-logo app-logo--small" src={logo} alt="Quiz app logo" />
-            </div>
             <div className="quiz-toolbar-actions">
               <button className="btn btn-secondary" onClick={handleDownload}>
                 Download quizData.json
