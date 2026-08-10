@@ -1,6 +1,8 @@
 import { Dropbox } from 'dropbox';
 
-const ACCESS_TOKEN = process.env.DROPBOX_ACCESS_TOKEN;
+const APP_ID = process.env.DROPBOX_APP_ID;
+const APP_SECRET = process.env.DROPBOX_APP_SECRET;
+const REFRESH_TOKEN = process.env.DROPBOX_REFRESH_TOKEN;
 const BASE_PATH = process.env.DROPBOX_BASE_PATH || '/quizzes';
 
 const isValidQuizData = (data) => {
@@ -58,11 +60,17 @@ const jsonResponse = (statusCode, body) => ({
 });
 
 export const handler = async (event) => {
-  if (!ACCESS_TOKEN) {
-    return jsonResponse(500, { error: 'Missing DROPBOX_ACCESS_TOKEN.' });
+  if (!APP_ID || !APP_SECRET || !REFRESH_TOKEN) {
+    return jsonResponse(500, {
+      error: 'Missing Dropbox OAuth configuration.',
+    });
   }
 
-  const dropbox = new Dropbox({ accessToken: ACCESS_TOKEN });
+  const dropbox = new Dropbox({
+    clientId: APP_ID,
+    clientSecret: APP_SECRET,
+    refreshToken: REFRESH_TOKEN,
+  });
 
   if (event.httpMethod === 'POST') {
     let payload;

@@ -2,15 +2,22 @@ import { Dropbox } from 'dropbox';
 
 const DAYS_TO_KEEP = 7;
 const BASE_PATH = process.env.DROPBOX_BASE_PATH || '/quizzes';
-const ACCESS_TOKEN = process.env.DROPBOX_ACCESS_TOKEN;
+const APP_ID = process.env.DROPBOX_APP_ID;
+const APP_SECRET = process.env.DROPBOX_APP_SECRET;
+const REFRESH_TOKEN = process.env.DROPBOX_REFRESH_TOKEN;
 const DRY_RUN = String(process.env.DRY_RUN || '').toLowerCase() === 'true';
 
-if (!ACCESS_TOKEN) {
-  console.error('Missing DROPBOX_ACCESS_TOKEN in environment.');
+if (!APP_ID || !APP_SECRET || !REFRESH_TOKEN) {
+  console.error('Missing Dropbox OAuth configuration.');
   process.exit(1);
 }
 
-const dropbox = new Dropbox({ accessToken: ACCESS_TOKEN });
+const dropbox = new Dropbox({
+  clientId: APP_ID,
+  clientSecret: APP_SECRET,
+  refreshToken: REFRESH_TOKEN,
+});
+
 const cutoffMs = Date.now() - DAYS_TO_KEEP * 24 * 60 * 60 * 1000;
 
 const shouldDelete = (entry) => {
