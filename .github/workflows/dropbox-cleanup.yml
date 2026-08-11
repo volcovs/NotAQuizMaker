@@ -23,8 +23,8 @@ jobs:
 
       - name: Run Dropbox cleanup
         env:
-          DROPBOX_CLIENT_ID: ${{ secrets.DROPBOX_CLIENT_ID }}
-          DROPBOX_CLIENT_SECRET: ${{ secrets.DROPBOX_CLIENT_SECRET }}
+          DROPBOX_APP_ID: ${{ secrets.DROPBOX_APP_ID }}
+          DROPBOX_APP_SECRET: ${{ secrets.DROPBOX_APP_SECRET }}
           DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
           DROPBOX_BASE_PATH: ${{ secrets.DROPBOX_BASE_PATH }}
           DRY_RUN: ${{ secrets.DRY_RUN }}
