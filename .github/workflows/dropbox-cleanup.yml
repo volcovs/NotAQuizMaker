@@ -1,5 +1,4 @@
 name: Dropbox Cleanup
-
 on:
   schedule:
     - cron: "0 3 * * *"
